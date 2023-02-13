@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.0.2 (Python 3.11.2 on darwin)" generated="20230213 23:44:04.262" rpa="false" schemaversion="3">
+<suite id="s1" name="Books API" source="/Users/nuttaponphitha/Desktop/robot/Tests/Books_API.robot">
+<test id="s1-t1" name="TC1 Create one book order" line="9">
+<kw name="Get access token" library="Books_API_KW">
+<kw name="Generate Random String" library="String">
+<var>${random_string}</var>
+<arg>4</arg>
+<arg>[NUMBERS]</arg>
+<doc>Generates a string with a desired ``length`` from the given ``chars``.</doc>
+<msg timestamp="20230213 23:44:04.380" level="INFO">${random_string} = 9842</msg>
+<status status="PASS" starttime="20230213 23:44:04.380" endtime="20230213 23:44:04.380"/>
+</kw>
+<kw name="Create Session" library="RequestsLibrary">
+<arg>my_session</arg>
+<arg>${baseUrl}</arg>
+<arg>verify=true</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20230213 23:44:04.380" level="INFO">Creating Session using : alias=my_session, url=https://simple-books-api.glitch.me, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<status status="PASS" starttime="20230213 23:44:04.380" endtime="20230213 23:44:04.380"/>
+</kw>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${header}</var>
+<arg>Content-Type=application/json</arg>
+<arg>Accept=*/*</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20230213 23:44:04.381" level="INFO">${header} = {'Content-Type': 'application/json', 'Accept': '*/*'}</msg>
+<status status="PASS" starttime="20230213 23:44:04.380" endtime="20230213 23:44:04.381"/>
+</kw>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>&amp;{body}</var>
+<arg>clientName=QA${random_string}</arg>
+<arg>clientEmail=QA${random_string}@email.com</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20230213 23:44:04.381" level="INFO">&amp;{body} = { clientName=QA9842 | clientEmail=QA9842@email.com }</msg>
+<status status="PASS" starttime="20230213 23:44:04.381" endtime="20230213 23:44:04.381"/>
+</kw>
+<kw name="POST On Session" library="RequestsLibrary">
+<var>${response}</var>
+<arg>my_session</arg>
+<arg>${Endpoint_Auth}</arg>
+<arg>headers=${header}</arg>
+<arg>json=&amp;{body}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<msg timestamp="20230213 23:44:06.283" level="INFO">POST Request : url=https://simple-books-api.glitch.me/api-clients/ 
+ path_url=/api-clients/ 
+ headers={'User-Agent': 'python-requests/2.28.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Content-Length': '59'} 
+ body=b'{"clientName": "QA9842", "clientEmail": "QA9842@email.com"}' 
+ </msg>
+<msg timestamp="20230213 23:44:06.283" level="INFO">POST Response : url=https://simple-books-api.glitch.me/api-clients/ 
+ status=201, reason=Created 
+ headers={'Date': 'Mon, 13 Feb 2023 16:44:14 GMT', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '82', 'Connection': 'keep-alive', 'x-powered-by': 'Express', 'etag': 'W/"52-rFg0J0xs3aPnSLACBNGcg4wRnQ0"'} 
+ body={"accessToken":"aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d"} 
+ </msg>
+<msg timestamp="20230213 23:44:06.284" level="INFO">${response} = &lt;Response [201]&gt;</msg>
+<status status="PASS" starttime="20230213 23:44:04.381" endtime="20230213 23:44:06.284"/>
+</kw>
+<kw name="Get Value From Json" library="JSONLibrary">
+<var>${get_accesstoken}</var>
+<arg>${response.json()}</arg>
+<arg>$.accessToken</arg>
+<doc>Get Value From JSON using JSONPath</doc>
+<msg timestamp="20230213 23:44:06.310" level="INFO">${get_accesstoken} = ['aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d']</msg>
+<status status="PASS" starttime="20230213 23:44:06.285" endtime="20230213 23:44:06.310"/>
+</kw>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>$accesstoken</arg>
+<arg>${get_accesstoken[0]}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<msg timestamp="20230213 23:44:06.311" level="INFO">${accesstoken} = aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d</msg>
+<status status="PASS" starttime="20230213 23:44:06.310" endtime="20230213 23:44:06.311"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${response.status_code}</arg>
+<arg>201</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<msg timestamp="20230213 23:44:06.311" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<status status="PASS" starttime="20230213 23:44:06.311" endtime="20230213 23:44:06.311"/>
+</kw>
+<status status="PASS" starttime="20230213 23:44:04.380" endtime="20230213 23:44:06.311"/>
+</kw>
+<kw name="Submit an order" library="Books_API_KW">
+<kw name="Create Session" library="RequestsLibrary">
+<arg>my_session</arg>
+<arg>${baseUrl}</arg>
+<arg>verify=true</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20230213 23:44:06.312" level="INFO">Creating Session using : alias=my_session, url=https://simple-books-api.glitch.me, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<status status="PASS" starttime="20230213 23:44:06.312" endtime="20230213 23:44:06.312"/>
+</kw>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${header}</var>
+<arg>Content-Type=application/json</arg>
+<arg>Accept=*/*</arg>
+<arg>Authorization=Bearer ${accesstoken}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20230213 23:44:06.312" level="INFO">${header} = {'Content-Type': 'application/json', 'Accept': '*/*', 'Authorization': 'Bearer aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d'}</msg>
+<status status="PASS" starttime="20230213 23:44:06.312" endtime="20230213 23:44:06.312"/>
+</kw>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>&amp;{body}</var>
+<arg>bookId=6</arg>
+<arg>customerName=test cust</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20230213 23:44:06.312" level="INFO">&amp;{body} = { bookId=6 | customerName=test cust }</msg>
+<status status="PASS" starttime="20230213 23:44:06.312" endtime="20230213 23:44:06.312"/>
+</kw>
+<kw name="POST On Session" library="RequestsLibrary">
+<var>${response}</var>
+<arg>my_session</arg>
+<arg>${Endpoint_Orders}</arg>
+<arg>headers=${header}</arg>
+<arg>json=${body}</arg>
+<doc>Sends a POST request on a previously created HTTP Session.</doc>
+<msg timestamp="20230213 23:44:07.577" level="INFO">POST Request : url=https://simple-books-api.glitch.me/orders/ 
+ path_url=/orders/ 
+ headers={'User-Agent': 'python-requests/2.28.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d', 'Content-Length': '44'} 
+ body=b'{"bookId": "6", "customerName": "test cust"}' 
+ </msg>
+<msg timestamp="20230213 23:44:07.577" level="INFO">POST Response : url=https://simple-books-api.glitch.me/orders/ 
+ status=201, reason=Created 
+ headers={'Date': 'Mon, 13 Feb 2023 16:44:16 GMT', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '50', 'Connection': 'keep-alive', 'x-powered-by': 'Express', 'etag': 'W/"32-k5qLZNCr7W3V/aZ8RNB8VFGRQ44"'} 
+ body={"created":true,"orderId":"H4Mgp_0fHaFiunfwyXoqX"} 
+ </msg>
+<msg timestamp="20230213 23:44:07.577" level="INFO">${response} = &lt;Response [201]&gt;</msg>
+<status status="PASS" starttime="20230213 23:44:06.313" endtime="20230213 23:44:07.577"/>
+</kw>
+<kw name="Get Value From Json" library="JSONLibrary">
+<var>${get_order_id}</var>
+<arg>${response.json()}</arg>
+<arg>$.orderId</arg>
+<doc>Get Value From JSON using JSONPath</doc>
+<msg timestamp="20230213 23:44:07.609" level="INFO">${get_order_id} = ['H4Mgp_0fHaFiunfwyXoqX']</msg>
+<status status="PASS" starttime="20230213 23:44:07.578" endtime="20230213 23:44:07.610"/>
+</kw>
+<kw name="Set Global Variable" library="BuiltIn">
+<arg>$orderId</arg>
+<arg>${get_order_id[0]}</arg>
+<doc>Makes a variable available globally in all tests and suites.</doc>
+<msg timestamp="20230213 23:44:07.610" level="INFO">${orderId} = H4Mgp_0fHaFiunfwyXoqX</msg>
+<status status="PASS" starttime="20230213 23:44:07.610" endtime="20230213 23:44:07.610"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${response.status_code}</arg>
+<arg>201</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<msg timestamp="20230213 23:44:07.610" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<status status="PASS" starttime="20230213 23:44:07.610" endtime="20230213 23:44:07.610"/>
+</kw>
+<status status="PASS" starttime="20230213 23:44:06.311" endtime="20230213 23:44:07.611"/>
+</kw>
+<status status="PASS" starttime="20230213 23:44:04.380" endtime="20230213 23:44:07.611"/>
+</test>
+<test id="s1-t2" name="TC2 Update an order by changing the customer name" line="13">
+<kw name="Change customer name" library="Books_API_KW">
+<kw name="Create Session" library="RequestsLibrary">
+<arg>my_session</arg>
+<arg>${base_url}</arg>
+<arg>verify=true</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20230213 23:44:07.611" level="INFO">Creating Session using : alias=my_session, url=https://simple-books-api.glitch.me, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<status status="PASS" starttime="20230213 23:44:07.611" endtime="20230213 23:44:07.611"/>
+</kw>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${header}</var>
+<arg>Content-Type=application/json</arg>
+<arg>Accept=*/*</arg>
+<arg>Authorization=Bearer ${accesstoken}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20230213 23:44:07.612" level="INFO">${header} = {'Content-Type': 'application/json', 'Accept': '*/*', 'Authorization': 'Bearer aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d'}</msg>
+<status status="PASS" starttime="20230213 23:44:07.611" endtime="20230213 23:44:07.612"/>
+</kw>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${body}</var>
+<arg>customerName=Nuttapon Phitha</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20230213 23:44:07.612" level="INFO">${body} = {'customerName': 'Nuttapon Phitha'}</msg>
+<status status="PASS" starttime="20230213 23:44:07.612" endtime="20230213 23:44:07.612"/>
+</kw>
+<kw name="PATCH On Session" library="RequestsLibrary">
+<var>${response}</var>
+<arg>my_session</arg>
+<arg>${Endpoint_Orders}${orderId}</arg>
+<arg>headers=${header}</arg>
+<arg>json=${body}</arg>
+<doc>Sends a PATCH request on a previously created HTTP Session.</doc>
+<msg timestamp="20230213 23:44:09.148" level="INFO">PATCH Request : url=https://simple-books-api.glitch.me/orders/H4Mgp_0fHaFiunfwyXoqX 
+ path_url=/orders/H4Mgp_0fHaFiunfwyXoqX 
+ headers={'User-Agent': 'python-requests/2.28.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d', 'Content-Length': '35'} 
+ body=b'{"customerName": "Nuttapon Phitha"}' 
+ </msg>
+<msg timestamp="20230213 23:44:09.148" level="INFO">PATCH Response : url=https://simple-books-api.glitch.me/orders/H4Mgp_0fHaFiunfwyXoqX 
+ status=204, reason=No Content 
+ headers={'Date': 'Mon, 13 Feb 2023 16:44:17 GMT', 'Connection': 'keep-alive', 'x-powered-by': 'Express'} 
+ body=None 
+ </msg>
+<msg timestamp="20230213 23:44:09.148" level="INFO">${response} = &lt;Response [204]&gt;</msg>
+<status status="PASS" starttime="20230213 23:44:07.612" endtime="20230213 23:44:09.148"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${response.status_code}</arg>
+<arg>204</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<msg timestamp="20230213 23:44:09.151" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<status status="PASS" starttime="20230213 23:44:09.149" endtime="20230213 23:44:09.151"/>
+</kw>
+<status status="PASS" starttime="20230213 23:44:07.611" endtime="20230213 23:44:09.151"/>
+</kw>
+<status status="PASS" starttime="20230213 23:44:07.611" endtime="20230213 23:44:09.151"/>
+</test>
+<test id="s1-t3" name="TC3 Get/check the order that you order from step 1 and 2" line="16">
+<kw name="Get an order" library="Books_API_KW">
+<kw name="Create Session" library="RequestsLibrary">
+<arg>my_session</arg>
+<arg>${base_url}</arg>
+<arg>verify=true</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20230213 23:44:09.153" level="INFO">Creating Session using : alias=my_session, url=https://simple-books-api.glitch.me, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<status status="PASS" starttime="20230213 23:44:09.153" endtime="20230213 23:44:09.153"/>
+</kw>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${header}</var>
+<arg>Content-Type=application/json</arg>
+<arg>Accept=*/*</arg>
+<arg>Authorization=Bearer ${accesstoken}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20230213 23:44:09.154" level="INFO">${header} = {'Content-Type': 'application/json', 'Accept': '*/*', 'Authorization': 'Bearer aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d'}</msg>
+<status status="PASS" starttime="20230213 23:44:09.153" endtime="20230213 23:44:09.154"/>
+</kw>
+<kw name="GET On Session" library="RequestsLibrary">
+<var>${response}</var>
+<arg>my_session</arg>
+<arg>${Endpoint_Orders}${orderId}</arg>
+<arg>headers=${header}</arg>
+<doc>Sends a GET request on a previously created HTTP Session.</doc>
+<msg timestamp="20230213 23:44:10.216" level="INFO">GET Request : url=https://simple-books-api.glitch.me/orders/H4Mgp_0fHaFiunfwyXoqX 
+ path_url=/orders/H4Mgp_0fHaFiunfwyXoqX 
+ headers={'User-Agent': 'python-requests/2.28.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d'} 
+ body=None 
+ </msg>
+<msg timestamp="20230213 23:44:10.216" level="INFO">GET Response : url=https://simple-books-api.glitch.me/orders/H4Mgp_0fHaFiunfwyXoqX 
+ status=200, reason=OK 
+ headers={'Date': 'Mon, 13 Feb 2023 16:44:18 GMT', 'Content-Type': 'application/json; charset=utf-8', 'Content-Length': '192', 'Connection': 'keep-alive', 'x-powered-by': 'Express', 'etag': 'W/"c0-Uyr3SoClOTt+NlK4XlQw/l7OSzI"'} 
+ body={"id":"H4Mgp_0fHaFiunfwyXoqX","bookId":6,"customerName":"Nuttapon Phitha","createdBy":"17a86943e20a35501e20794c2a9e858781d05e524e874116ae90a0e884174ca6","quantity":1,"timestamp":1676306656000} 
+ </msg>
+<msg timestamp="20230213 23:44:10.216" level="INFO">${response} = &lt;Response [200]&gt;</msg>
+<status status="PASS" starttime="20230213 23:44:09.154" endtime="20230213 23:44:10.216"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${response.status_code}</arg>
+<arg>200</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<msg timestamp="20230213 23:44:10.218" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<status status="PASS" starttime="20230213 23:44:10.217" endtime="20230213 23:44:10.219"/>
+</kw>
+<status status="PASS" starttime="20230213 23:44:09.152" endtime="20230213 23:44:10.219"/>
+</kw>
+<status status="PASS" starttime="20230213 23:44:09.152" endtime="20230213 23:44:10.219"/>
+</test>
+<test id="s1-t4" name="TC4 Delete/cancel your order" line="19">
+<kw name="Delete an order" library="Books_API_KW">
+<kw name="Create Session" library="RequestsLibrary">
+<arg>my_session</arg>
+<arg>${base_url}</arg>
+<arg>verify=true</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20230213 23:44:10.220" level="INFO">Creating Session using : alias=my_session, url=https://simple-books-api.glitch.me, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=True,                     debug=0 </msg>
+<status status="PASS" starttime="20230213 23:44:10.220" endtime="20230213 23:44:10.221"/>
+</kw>
+<kw name="Create Dictionary" library="BuiltIn">
+<var>${header}</var>
+<arg>Content-Type=application/json</arg>
+<arg>Accept=*/*</arg>
+<arg>Authorization=Bearer ${accesstoken}</arg>
+<doc>Creates and returns a dictionary based on the given ``items``.</doc>
+<msg timestamp="20230213 23:44:10.221" level="INFO">${header} = {'Content-Type': 'application/json', 'Accept': '*/*', 'Authorization': 'Bearer aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d'}</msg>
+<status status="PASS" starttime="20230213 23:44:10.221" endtime="20230213 23:44:10.221"/>
+</kw>
+<kw name="DELETE On Session" library="RequestsLibrary">
+<var>${response}</var>
+<arg>my_session</arg>
+<arg>${Endpoint_Orders}${orderId}</arg>
+<arg>headers=${header}</arg>
+<doc>Sends a DELETE request on a previously created HTTP Session.</doc>
+<msg timestamp="20230213 23:44:11.562" level="INFO">DELETE Request : url=https://simple-books-api.glitch.me/orders/H4Mgp_0fHaFiunfwyXoqX 
+ path_url=/orders/H4Mgp_0fHaFiunfwyXoqX 
+ headers={'User-Agent': 'python-requests/2.28.2', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive', 'Content-Type': 'application/json', 'Authorization': 'Bearer aa1749753663e432f131247a1667a1093cfbb5534f8255bf793413c196876e1d', 'Content-Length': '0'} 
+ body=None 
+ </msg>
+<msg timestamp="20230213 23:44:11.562" level="INFO">DELETE Response : url=https://simple-books-api.glitch.me/orders/H4Mgp_0fHaFiunfwyXoqX 
+ status=204, reason=No Content 
+ headers={'Date': 'Mon, 13 Feb 2023 16:44:20 GMT', 'Connection': 'keep-alive', 'x-powered-by': 'Express'} 
+ body=None 
+ </msg>
+<msg timestamp="20230213 23:44:11.562" level="INFO">${response} = &lt;Response [204]&gt;</msg>
+<status status="PASS" starttime="20230213 23:44:10.221" endtime="20230213 23:44:11.562"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${response.status_code}</arg>
+<arg>204</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<msg timestamp="20230213 23:44:11.564" level="INFO">Argument types are:
+&lt;class 'int'&gt;
+&lt;class 'str'&gt;</msg>
+<status status="PASS" starttime="20230213 23:44:11.563" endtime="20230213 23:44:11.565"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${response.reason}</arg>
+<arg>No Content</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" starttime="20230213 23:44:11.565" endtime="20230213 23:44:11.566"/>
+</kw>
+<status status="PASS" starttime="20230213 23:44:10.220" endtime="20230213 23:44:11.566"/>
+</kw>
+<status status="PASS" starttime="20230213 23:44:10.219" endtime="20230213 23:44:11.566"/>
+</test>
+<status status="PASS" starttime="20230213 23:44:04.262" endtime="20230213 23:44:11.567"/>
+</suite>
+<statistics>
+<total>
+<stat pass="4" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="4" fail="0" skip="0" id="s1" name="Books API">Books API</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
